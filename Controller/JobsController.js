@@ -57,7 +57,7 @@ const applyForJob = async(req,res)=>{
 }
 const getAlUserForParticularJob = async(req,res)=>{
     try{
-        const jobId = req.body.jobId
+        const jobId = req.query.jobId
 
         const data = await AppliedJobModel.find({jobId}).populate('userId')
         const response = {
