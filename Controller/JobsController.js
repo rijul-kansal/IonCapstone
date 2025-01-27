@@ -59,7 +59,10 @@ const getAlUserForParticularJob = async(req,res)=>{
     try{
         const jobId = req.query.jobId
 
-        const data = await AppliedJobModel.find({jobId}).populate('userId')
+        const data = await AppliedJobModel.find({
+            jobId, 
+            status: { $in: ["Pending", "Seen"] }
+          }).populate('userId');          
         const response = {
             status:"success",
             data:{
