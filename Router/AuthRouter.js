@@ -12,4 +12,6 @@ router.route('/applyForJobs').post(JobsController.applyForJob);
 router.route('/archive').post(JobsController.achieve);
 router.route('/unArchive').post(JobsController.unAchieve);
 router.route('/reject').post(JobsController.rejectedApplication);
+router.route('/setTimeSlots').post(JobsController.setFreeTimeSlots);
+router.route('/getTimeSlots').get(JobsController.getFreeTimeSlot);
 module.exports = router;

@@ -1,5 +1,6 @@
 const JobModel = require('../Models/JobModel')
 const AppliedJobModel = require('./../Models/AppliedJobModel')
+const TimeSlotModel = require('./../Models/TimeSlotsModel')
 const Mail = require('./../Utils/NodeMailer')
 const Messages = require('./../Utils/Message')
 const createJob = async(req,res)=>{
@@ -183,6 +184,35 @@ const rejectedApplication = async(req,res)=>{
         res.status(400).json({status:"fail",message:err.message})
     }
 }
+const setFreeTimeSlots = async(req,res)=>{
+
+    const d = req.body
+
+    await TimeSlotModel.create(d)
+    res.send("success")
+} 
+const getFreeTimeSlot = async(req,res)=>{
+
+    try{
+        const roundName = req.query.roundName
+        const data = await TimeSlotModel.find({roundName}) 
+
+        const response  = {
+            status:"success",
+            data:{
+                data
+            }
+        }
+        res.status(200).json(response)
+    }catch(err){
+        res.status(400).json({status:"fail",message:err.message})
+    }
+
+}
+
+const bookInterview = async(req,res)=>{
+    const {day,startTime,endTime,roundName,userId} = req.body
+}
 module.exports = {
     createJob,
     getAllJobs,
@@ -190,5 +220,7 @@ module.exports = {
     getAlUserForParticularJob,
     achieve,
     unAchieve,
-    rejectedApplication
+    rejectedApplication,
+    setFreeTimeSlots,
+    getFreeTimeSlot
 }
