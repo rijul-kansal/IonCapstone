@@ -45,6 +45,26 @@ const userSchema = new mongoose.Schema({
       message: (props) => `${props.value} is not a valid email address!`,
     },
     index: true,
+  },
+  screeningFeedback:{
+    type:[String],
+    default:[null]
+  },
+  hrFeedback:{
+    type:[String],
+    default:[null]
+  },
+  testScore:{
+    type:Number,
+    default:0
+  },
+  techFeedback:{
+    type:[String],
+    default:[null]
+  },
+  apFeedback:{
+    type:[String],
+    default:[null]
   }
 });
 

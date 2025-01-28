@@ -5,14 +5,8 @@ const { promisify } = require('util');
 // this api will create a new user in database
 const createUser = async (req, res) => {
   try {
-    const { name, password, email, typeOfUser, mobileNumber } = req.body;
-    const result = await UserModel.create({
-      name,
-      password,
-      email,
-      typeOfUser,
-      mobileNumber,
-    });
+    const data = req.body;
+    const result = await UserModel.create(data);
     const response = {
       status: 'Success',
       data: {

@@ -209,7 +209,6 @@ const getFreeTimeSlot = async(req,res)=>{
     }
 
 }
-
 const bookInterview = async(req,res)=>{
     const {day,startTime,endTime,roundName,userId} = req.body
 }
