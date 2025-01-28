@@ -20,7 +20,32 @@ const applicationSchema = new mongoose.Schema({
     type: String,
     enum: ['Pending', 'Archive','Seen','Rejected'],
     default: 'Pending'
-  }
+  },
+  screeningStatus:{
+    type:'String',
+    enum:['Pending','Done'],
+    default:'Pending'
+  },
+  hrStatus:{
+    type:'String',
+    enum:['Pending','Done'],
+    default:'Pending'
+  },
+  testStatus:{
+    type:'String',
+    enum:['Pending','Done'],
+    default:'Pending'
+  },
+  techStatus:{
+    type:'String',
+    enum:['Pending','Done'],
+    default:'Pending'
+  },
+  apStatus:{
+    type:'String',
+    enum:['Pending','Selected'],
+    default:'Pending'
+  },
 });
 
 // Create the model

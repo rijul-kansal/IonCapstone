@@ -59,14 +59,49 @@ const getAlUserForParticularJob = async(req,res)=>{
     try{
         const jobId = req.query.jobId
 
-        const data = await AppliedJobModel.find({
-            jobId, 
-            status: { $in: ["Pending", "Seen"] }
-          }).populate('userId');          
+        const data = await AppliedJobModel.find({jobId}).populate('userId');
+        let screening = []
+        let hr = []
+        let test = []
+        let tech = []
+        let ap = []
+
+        for(item in data)
+        {
+            const d = data[item]
+            if(d.status == "Rejected" || d.status == "Archive") continue
+
+            if(d.screeningStatus == "Pending") 
+            {
+                screening.push(d)
+                continue
+            }
+            if(d.hrStatus == "Pending") {
+                hr.push(d)
+                continue
+            }
+            if(d.testStatus == "Pending") {
+                test.push(d)
+                continue
+            }
+            if(d.techStatus == "Pending") {
+                tech.push(d)
+                continue
+            }
+            if(d.apStatus == "Pending")
+            {
+                ap.push(d)
+                continue
+            }
+        }
         const response = {
             status:"success",
             data:{
-                data
+                screening,
+                hr,
+                test,
+                tech,
+                ap,
             }
         }
         res.status(200).json(response)
@@ -99,7 +134,6 @@ const achieve = async(req,res)=>{
         res.status(400).json({status:"fail",message:err.message})
     }
 }
-
 const unAchieve = async(req,res)=>{
     try{
         const jobId = req.body.jobId
@@ -124,7 +158,6 @@ const unAchieve = async(req,res)=>{
         res.status(400).json({status:"fail",message:err.message})
     }
 }
-
 const rejectedApplication = async(req,res)=>{
     try{
         const jobId = req.body.jobId
