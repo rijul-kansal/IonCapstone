@@ -3,6 +3,8 @@ const AppliedJobModel = require('./../Models/AppliedJobModel')
 const TimeSlotModel = require('./../Models/TimeSlotsModel')
 const Mail = require('./../Utils/NodeMailer')
 const Messages = require('./../Utils/Message')
+const App = require('./../app')
+const axios = require('axios');
 const createJob = async(req,res)=>{
     
     const d = req.body
@@ -35,23 +37,17 @@ const getAllJobs = async(req,res)=>{
 } 
 const applyForJob = async(req,res)=>{
     try{
-        const {jobId , userId} = req.body
+        const {jobId , userId , resumeLink } = req.body
         const user = await AppliedJobModel.findOne({jobId, userId})
-        if(user)
-        {
-            return res.status(400).json({status:"fail",message:"all ready applied"})
-        }
-        const data = await AppliedJobModel.create({
-            jobId,
-            userId
-        })
-        const response = {
-            status:"success",
-            data:{
-                data
-            }
-        }
-        res.status(200).json(response)
+        // if(user)
+        // {
+        //     return res.status(400).json({status:"fail",message:"all ready applied"})
+        // }
+
+        const job = await JobModel.findOne({_id:jobId})
+        let resumeText = await App.extract(resumeLink)
+        resumeText=JSON.stringify(resumeText);
+        const resumeScore = await getATSScore(resumeText, job.roleAndResponsibilities + job.skillsAndExperience,res,jobId,userId)
     }catch(err){
         res.status(400).json({status:"fail",message:err.message})
     }
@@ -209,9 +205,37 @@ const getFreeTimeSlot = async(req,res)=>{
     }
 
 }
-const bookInterview = async(req,res)=>{
-    const {day,startTime,endTime,roundName,userId} = req.body
+
+const getATSScore = async(resumeText,jd,res, jobId,userId)=>{
+    const apiUrl = "https://78fd-34-172-40-55.ngrok-free.app/predict"; 
+    const requestData = {
+        features:[resumeText,jd,resumeText]
+    }
+
+    // Send POST request
+    axios.post(apiUrl, requestData)
+        .then(async response => {
+
+            const no = response.data.prediction*100
+            const data = await AppliedJobModel.create({
+                jobId,
+                userId,
+                resumeScore:no
+            })
+            const resp = {
+                status:"success",
+                data:{
+                    data
+                }
+            }
+            res.status(200).json(resp)
+            return response.data
+        })
+        .catch(error => {
+            console.error("❌ API Error:", error.response ? error.response.data : error.message);
+        });
 }
+
 module.exports = {
     createJob,
     getAllJobs,

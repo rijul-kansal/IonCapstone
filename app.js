@@ -1,20 +1,17 @@
-const express = require('express');
 const pdfjsLib = require("pdfjs-dist");
 
-const app = express();
-const PORT = 3000;
 
 // Route to fetch and convert the image
-app.get('/', async (req, res) => {
-    let doc = await pdfjsLib.getDocument("https://career-connect-bkt.s3.ap-south-1.amazonaws.com/Anirudh_Soma_Resume_2024f.pdf").promise;
+const extract = async(resumeLink) => {
+    let doc = await pdfjsLib.getDocument(resumeLink).promise;
     let page1 = await doc.getPage(1);
     let content = await page1.getTextContent();
     let strings = content.items.map(function(item) {
         return item.str;
     });
     const data = extractInfo(strings, regex)
-    res.send(data)
-});
+    return data
+};
 
 
 
@@ -61,8 +58,6 @@ const extractInfo = (rawData, regex) => {
     return result;
   };
 
-
-// Start the server
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+module.exports = {
+  extract
+}

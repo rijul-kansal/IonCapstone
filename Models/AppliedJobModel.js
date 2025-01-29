@@ -46,6 +46,10 @@ const applicationSchema = new mongoose.Schema({
     enum:['Pending','Selected'],
     default:'Pending'
   },
+  resumeScore:{
+    type:Number,
+    default:0
+  }
 });
 
 // Create the model
