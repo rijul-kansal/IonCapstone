@@ -56,7 +56,7 @@ const getAlUserForParticularJob = async(req,res)=>{
     try{
         const jobId = req.query.jobId
 
-        const data = await AppliedJobModel.find({jobId}).populate('userId');
+        const data = await AppliedJobModel.find({jobId}).populate('userId').sort('resumeScore');
         let screening = []
         let hr = []
         let test = []
